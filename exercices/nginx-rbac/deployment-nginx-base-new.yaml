@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  namespace: nginx
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.19.6
+          imagePullPolicy: "IfNotPresent"
+          ports:
+            - containerPort: 80
+          #securityContext:
+          #  privileged: true
+      serviceAccountName: nginx-sa
+

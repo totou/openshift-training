@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-toolbox
+  namespace: mytoolbox
+  annotations:
+    image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"my-toolbox:latest"},"fieldPath":"spec.template.spec.containers[?(@.name==\"my-toolbox\")].image"}]'
+spec:
+  metadata:
+    annotations:
+      alpha.image.policy.openshift.io/resolve-names: '*'
+  selector:
+    matchLabels:
+      app: my-toolbox
+  replicas: 1
+  template:
+    annotations:
+      alpha.image.policy.openshift.io/resolve-names: '*'
+    metadata:
+      labels:
+        app: my-toolbox
+    spec:
+      containers:
+        - name: my-toolbox
+          image: my-toolbox:latest
+          imagePullPolicy: "Always"
+          command: ["sleep", "infinity"]
+          volumeMounts:
+            - name: my-toolbox-pvc-volume
+              mountPath: "/trainingfiles"
+              readOnly: false
+      serviceAccountName: my-toolbox-sa
+      volumes:
+        - name: my-toolbox-pvc-volume
+          persistentVolumeClaim:
+            claimName: my-toolbox-pvc
+

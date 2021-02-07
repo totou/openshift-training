@@ -1,0 +1,10 @@
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  name: my-app-image
+  namespace: myapp
+  annotations:
+    openshift.io/display-name: my-app-is
+spec:
+  lookupPolicy:
+    local: false
