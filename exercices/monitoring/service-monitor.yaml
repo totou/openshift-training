@@ -1,0 +1,14 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    k8s-app: monitor-demo-monitor
+  name: monitor-demo-monitor
+spec:
+  endpoints:
+  - interval: 30s
+    port: web
+    scheme: http
+  selector:
+    matchLabels:
+      app: monitor-demo-app

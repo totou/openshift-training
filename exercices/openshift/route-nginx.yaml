@@ -1,0 +1,16 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  annotations:
+    haproxy.router.openshift.io/rewrite-target: /
+  name: my-nginx-route
+spec:
+  host: my-nginx-route.apps-crc.testing
+  path: /
+  to:
+    kind: Service
+    name: my-nginx-svc
+    weight: 100
+  port:
+    targetPort: my-http-port
+  wildcardPolicy: None

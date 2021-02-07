@@ -1,0 +1,21 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: my-nginx-virtualservice
+  namespace: nginx
+spec:
+  hosts:
+  - my-nginx-gateway.apps-crc.testing
+  gateways:
+  - nginx/my-nginx-gateway
+  - mesh # applies to all the sidecars in the mesh
+  http:
+  - match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        host: my-nginx-svc
+        port:
+          number: 80
+

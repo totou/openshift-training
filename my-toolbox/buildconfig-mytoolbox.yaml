@@ -1,0 +1,26 @@
+kind: BuildConfig
+apiVersion: build.openshift.io/v1
+metadata:
+  name: "my-toolbox-build"
+  namespace: mytoolbox
+spec:
+  runPolicy: "Serial"
+  triggers:
+    - type: "ImageChange"
+  source:
+    dockerfile: |
+      FROM debian:stable
+      RUN apt update && apt install -y curl wget vim tar bash less
+      RUN wget https://mirror.openshift.com/pub/openshift-v4/clients/oc/latest/linux/oc.tar.gz && tar -xvf oc.tar.gz && chmod a+x oc kubectl && mv oc kubectl /usr/local/bin/ && \
+          wget https://get.helm.sh/helm-v3.5.0-linux-amd64.tar.gz && tar -xvf helm-v3.5.0-linux-amd64.tar.gz && chmod a+x linux-amd64/helm && mv linux-amd64/helm /usr/local/bin/helm && \
+          curl -L https://istio.io/downloadIstio | ISTIO_VERSION=1.8.2 TARGET_ARCH=x86_64 sh - && chmod a+x istio-1.8.2/bin/istioctl && mv istio-1.8.2/bin/istioctl /usr/local/bin/istioctl
+  strategy:
+    dockerStrategy:
+      #noCache: true
+      from:
+        kind: "DockerImage"
+        name: "debian:stable-slim"
+  output:
+    to:
+      kind: "ImageStreamTag"
+      name: "my-toolbox:latest"
