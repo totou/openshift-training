@@ -17,4 +17,7 @@ crc --log-level debug start --pull-secret-file red-hat-crc-pull-secret.txt -m 23
 crc console --credentials
 https://console-openshift-console.apps-crc.testing/
 
-
+# Link WSL with Windows
+mkdir ~/.kube
+ln -s /mnt/c/Users/MSI1-S2/.kube/config ~/.kube/config
+wget https://mirror.openshift.com/pub/openshift-v4/clients/oc/latest/linux/oc.tar.gz && tar -xvf oc.tar.gz && chmod a+x oc kubectl && sudo cp oc kubectl /usr/local/bin/
