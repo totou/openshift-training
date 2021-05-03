@@ -21,3 +21,7 @@ https://console-openshift-console.apps-crc.testing/
 mkdir ~/.kube
 ln -s /mnt/c/Users/MSI1-S2/.kube/config ~/.kube/config
 wget https://mirror.openshift.com/pub/openshift-v4/clients/oc/latest/linux/oc.tar.gz && tar -xvf oc.tar.gz && chmod a+x oc kubectl && sudo cp oc kubectl /usr/local/bin/
+# In powershell get the ip
+ping api.crc.testing
+# Add IP in /etc/hosts file
+172.20.166.233 api.crc.testing *.apps-crc.testing
