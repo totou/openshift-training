@@ -25,3 +25,4 @@ wget https://mirror.openshift.com/pub/openshift-v4/clients/oc/latest/linux/oc.ta
 ping api.crc.testing
 # Add IP in /etc/hosts file
 172.20.166.233 api.crc.testing *.apps-crc.testing
+
