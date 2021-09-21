@@ -7,7 +7,7 @@ spec:
   runPolicy: "Serial"
   triggers:
     - type: "ImageChange"
-    #- type: "ConfigChange"
+    - type: "ConfigChange"
   source:
     configMaps:
       - configMap:
@@ -29,6 +29,9 @@ spec:
       from:
         kind: "DockerImage"
         name: "python:3.9.1-alpine"
+      # Bypass rate limit
+      #pullSecret:
+      #  name: "training"
   output:
     to:
       kind: "ImageStreamTag"

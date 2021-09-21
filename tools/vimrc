@@ -1,0 +1,17 @@
+" Tabs
+set tabstop=4
+set softtabstop=4
+set shiftwidth=4
+set expandtab
+set autoindent " Same indent as previous line
+set smartindent " Start more indent when { for example
+" Yaml handling
+augroup filetype_specifics
+    " Start by clearing the group
+    autocmd!
+    "au! BufNewFile,BufReadPost *.{yaml,yml} set filetype=yaml foldmethod=indent
+    au! BufNewFile,BufReadPost *.{yaml,yml} set filetype=yaml nofoldenable
+    autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
+    " Always strip whitespaces at end of lines -> replaced by function StripTrailingWhitespaces
+    " autocmd BufWritePre * :%s/\s\+$//e
+augroup END

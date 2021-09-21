@@ -18,6 +18,9 @@ spec:
       - image: quay.io/rbaumgar/monitor-demo-app-jvm
         imagePullPolicy: IfNotPresent
         name: monitor-demo-app
+        resources:
+          requests:
+            cpu: 20m
 ---
 apiVersion: v1
 kind: Service
