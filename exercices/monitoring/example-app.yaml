@@ -1,9 +1,15 @@
+apiVersion: v1
+kind: Project
+metadata:
+  name: monitor-demo-app
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
     app: monitor-demo-app
   name: monitor-demo-app
+  namespace: monitor-demo-app
 spec:
   replicas: 1
   selector:
@@ -28,6 +34,7 @@ metadata:
   labels:
     app: monitor-demo-app
   name: monitor-demo-app
+  namespace: monitor-demo-app
 spec:
   ports:
   - port: 8080
@@ -44,6 +51,7 @@ metadata:
   labels:
     app: monitor-demo-app
   name: monitor-demo-app
+  namespace: monitor-demo-app
 spec:
   path: /
   to:

@@ -20,14 +20,22 @@ crc --log-level debug setup
 crc --log-level debug delete
 crc --log-level debug config set enable-cluster-monitoring true
 crc --log-level debug config set kubeadmin-password admin
-crc --log-level debug start --pull-secret-file red-hat-crc-pull-secret.txt -m 23000 --disable-update-check -n 1.1.1.1
+crc --log-level debug config set consent-telemetry no
+crc --log-level debug start --pull-secret-file red-hat-crc-pull-secret.txt --cpus 6 --memory 28000 --disable-update-check -n 1.1.1.1
 # Retrieve credentials
 crc console --credentials
+# Login
+oc login -u kubeadmin -p admin https://api.crc.testing:6443
 ```
 Cluster console: https://console-openshift-console.apps-crc.testing/
 
 ### Link WSL to CRC
-Semi-automatic version (recommended)
+Semi-automatic version (recommended WSL2)
+```
+./tools/setup_wsl2.sh <Windows Username>
+```
+
+Semi-automatic version (recommended WSL1)
 ```
 # In powershell get the cluster ip
 ping api.crc.testing

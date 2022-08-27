@@ -8,7 +8,7 @@ spec:
     kind: MyCRD
     singular: mycrd
     plural: mycrds
-    shortnames:
+    shortNames:
       - mcrd
   # Namespaced or Cluster
   scope: Namespaced

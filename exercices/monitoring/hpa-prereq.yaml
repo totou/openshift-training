@@ -104,7 +104,7 @@ metadata:
 data:
   config.yaml: |
     rules:
-    - seriesQuery: 'application_org_example_rbaumgar_GreetingResource_greetings_total {namespace!="",pod!=""}'
+    - seriesQuery: 'application_greetings_total{namespace!="",pod!=""}'
       resources:
         overrides:
           namespace: {resource: "namespace"}

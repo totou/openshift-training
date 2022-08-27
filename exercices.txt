@@ -17,7 +17,14 @@ crc --log-level debug setup
 crc --log-level debug delete
 crc --log-level debug config set enable-cluster-monitoring true
 crc --log-level debug config set kubeadmin-password admin
-crc --log-level debug start --pull-secret-file red-hat-crc-pull-secret.txt -m 23000 --disable-update-check -n 1.1.1.1
+crc --log-level debug config set consent-telemetry no
+crc --log-level debug start --pull-secret-file red-hat-crc-pull-secret.txt --cpus 6 --memory 28000 --disable-update-check -n 1.1.1.1
+
+# Retrieve credentials
+crc console --credentials
+
+# Login
+oc login -u kubeadmin -p admin https://api.crc.testing:6443
 
 # Retrieve Cluster access
 crc console
@@ -25,12 +32,12 @@ crc console --credentials
 https://console-openshift-console.apps-crc.testing/
 
 # Login to the cluster - unix version
-eval $(crc oc-env)
+# eval $(crc oc-env)
 oc login -u kubeadmin -p admin https://api.crc.testing:6443
 
 # Delete cluster
 crc --log-level debug delete
-# And if that doe snot work ...
+# And if that does not work ...
 crc --log-level debug delete -f
 
 
@@ -39,12 +46,12 @@ crc --log-level debug delete -f
 # Exercices
 ################################
 
-
+################
 Exercise Deployment
 Create a nginx Deployment with 3 replicas
 Transform it into StatefulSet and play with scaling or update the version
 
-
+################
 Exercise DeploymentConfig
 Create a nginx DeploymentConfig with 3 replicas
 oc create -f exercices/openshift/deployment-config-nginx-base.yaml
@@ -66,7 +73,7 @@ oc delete pod
 oc get events
 oc edit dc <dc>
 
-
+################
 Exercise Service
 Create a Service "cluster-ip" (default) and try to connect to your Deployment from: -the toolbox pod, -the host machine (wsl)
 oc -n mytoolbox exec -ti $(oc -n mytoolbox get pods | grep Running | cut -d ' ' -f 1) -- bash
@@ -76,18 +83,21 @@ Only one method should work.
 Create a NodePort service targetting the previous Deployment. Try to access it from the WSL.
 curl http://<ip>:<port>/
 
-
+################
 Exercise Rollouts and Route
 
 Add some pre and post tasks in a new DeploymentConfig to see how it behaves when making rollouts
 You can use given DC as a starter with a PVC included
 Create a Route that can balance to 2 different kind of PODs
 Bonus: play with a few headers from https://docs.openshift.com/container-platform/4.8/networking/routes/route-configuration.html
+
+Only if time
 Create a StatefulSet and rollout a new version
-Only if some free time: Now follow the Kubernetes tutorial https://kubernetes.io/docs/tutorials/stateful-application/basic-stateful-set/#rolling-out-a-canary to make Canary and phased rollout and check the differences
+Now follow the Kubernetes tutorial https://kubernetes.io/docs/tutorials/stateful-application/basic-stateful-set/#rolling-out-a-canary to make Canary and phased rollout and check the differences
 Pause rollout
 Create a DeploymentConfig and rollout a new version
 Pause rollout, see how it differs with StatefulSets
+
 Play with pre/post hooks and rollout parameters to change rollout (already done in another exercise)
 Adapt your rollout with manual instructions from the documentation https://docs.openshift.com/container-platform/4.8/applications/deployments/deployment-strategies.html#deployments-custom-strategy_deployment-strategies
 oc create -f exercices/dc-rollout/service-nginx-1.yaml
@@ -99,12 +109,14 @@ oc create -f exercices/dc-rollout/deployment-config-nginx-rollout-1.yaml
 http://my-nginx-route.apps-crc.testing/pvc/logs.html
 oc api-resources
 
-
+################
 Exercise RBAC
 
 oc delete project nginx
 oc login --token $(oc sa get-token nginx-sa)
 oc whoami
+oc adm who-can use scc anyuid
+oc adm who-can get secrets
 
 Create a new ServiceAccount in mytoolbox and give it rights to read secrets
 Use this service account in a Deployment with kubectl/oc and check it can do what you wanted (use the my-toolbox and change the service account to the one you created for example)
@@ -113,14 +125,14 @@ oc project mytoolbox
 oc exec -ti my-toolbox-65595675c8-d27l8 -- bash
 system:serviceaccount:mytoolbox:test
 
-
+################
 Exercise SCC
 Ensure the nginx can start in a new nginx project
 Hint: nginx containers is not restricted compliant
 Create a new anyuid SCC (harder) or ensure your user can access another compliant SCC
 Bonus: use the privileged scc (overkill)
 
-
+################
 Exercise BuildConfig/Imagestream
 Create a nginx DeploymentConfig or Deployment with 3 replicas
 Create a BuildConfig and a corresponding ImageStream to build your own nginx modified version (no need for a big change, add an env var, or a maintainer)
@@ -131,20 +143,20 @@ annotations:
 
 
 
-
+################
 Exercise monitoring
 
 oc create -f exercices/openshift/configmap-monitoring.yaml
 
-my-nginx-ingress.apps-crc.testing my-nginx-route.apps-crc.testing thanos-querier-openshift-monitoring.apps-crc.testing prometheus-k8s-openshift-monitoring.apps-crc.testing grafana-openshift-monitoring.apps-crc.testing alertmanager-main-openshift-monitoring.apps-crc.testing monitor-demo-app-default.apps-crc.testing prometheus-user-openshift-monitoring.apps-crc.testing thanos-ruler-openshift-user-workload-monitoring.apps-crc.testing api.crc.testing oauth-openshift.apps-crc.testing console-openshift-console.apps-crc.testing default-route-openshift-image-registry.apps-crc.testing kiali-istio-system.apps-crc.testing prometheus-istio-system.apps-crc.testing jaeger-istio-system.apps-crc.testing istio-ingressgateway-istio-system.apps-crc.testing grafana-istio-system.apps-crc.testing my-nginx-ingress-rbac.apps-crc.testing my-nginx-gateway.apps-crc.testing bookinfo.apps-crc.testing my-app-gateway.apps-crc.testing my-app-ingress.apps-crc.testing
-
+# Deprecated commands, only for old CRCs
 https://access.redhat.com/documentation/en-us/red_hat_codeready_containers/1.20/html/getting_started_guide/administrative-tasks_gsg#starting-monitoring-alerting-telemetry_gsg
 Enable monitoring for user-defined projects (might not start if not enough RAM, might have to kill a few things to make it start, disable after training)
 Hack: Patch Grafana config to become admin
 Bonus: Add new dashboard using the GUI on a metric of your choice
 Start provided objects
 
-oc new-project nginx
+# Now included in the example
+# oc new-project monitor-demo-app
 oc create -f exercices/monitoring/example-app.yaml
 oc exec -ti  monitor-demo-app-577f4fb887-nzxzp -- /bin/sh
 curl http://127.0.0.1:8080/metrics
@@ -152,28 +164,28 @@ curl http://127.0.0.1:8080/metrics
 oc -n openshift-monitoring get servicemonitor kube-state-metrics -o yaml
 oc -n openshift-monitoring get prometheusrule prometheus-k8s-rules -o yaml
 
-Add a new alerting rule on those metrics
-application_org_example_rbaumgar_GreetingResource_greetings_total
+Add a new alerting rule on this metrics 'application_greetings_total'i and test how it behaves
 
-See how it behaves
-
+# From ioutside the POD if it works with WSL2... (probably not)
 export URL=$(oc -n nginx get route monitor-demo-app -o jsonpath='{.spec.host}')
 curl $URL/hello
-for i in {1..60}; do curl $URL/hello; done
+curl $URL/prime/6
 
+# From inside the POD (oc exec command)
+curl http://127.0.0.1:8080/hello
 
+# Put some charge
+for i in {1..300}; do curl $URL/hello; done
+
+################
 Exercise HPA
-Enable HPA in v1 for provided deployment
+Enable HPA in v2 for provided deployment (v1 provided if you want to test also)
 exercices/monitoring/hpa-monitoring-v2beta2.yaml
-Enable HPA v2beta2
-Put some work on the deployment and see how it behaves
-export URL=$(oc get route monitor-demo-app -o jsonpath='{.spec.host}')
-curl $URL/hello
-for i in {1..60}; do curl $URL/hello; done
+Put some charge on the deployment and see how it behaves (cf. previous exercice commands)
 
-
+################
 Exercise Helm
-Create new helm package for creating your own nginx in mytoolbox /trainingfiles or in the WSL
+Create new helm package for creating your own nginx in mytoolbox /trainingfiles or in the WSL2 (might not work)
 oc exec -it <pod> -- bash
 cd /trainingfiles
 helm create helmnginx
@@ -182,7 +194,7 @@ helm -n nginx install helmnginx .
 Check Chart.yaml, values.yaml… and personalise a bit
 Launch it and test it in a new namespace
 
-# You will need to add this in not in default namespace
+# You will need to add this in templates as we are not in default namespace
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
@@ -216,7 +228,7 @@ roleRef:
   apiGroup: rbac.authorization.k8s.io
 
 
-
+################
 Exercise CRD
 Create a very simple CRD and install it
 oc create -f exercices/kubernetes/crd-definition-v1.yaml
@@ -224,7 +236,7 @@ oc get crd | grep mycrd
 oc describe crd mycrd
 Modified it to create a version v2 and ensure it does what you expect
 
-
+################
 Exercise Operator SDK
 Only if time permits during the training as it requires install on the machines and can take a bit more time than just following the steps
 Follow the tutorial in local mode at https://sdk.operatorframework.io/docs/building-operators/helm/tutorial/
@@ -237,11 +249,22 @@ export OPERATOR_SDK_DL_URL=https://github.com/operator-framework/operator-sdk/re
 curl -LO ${OPERATOR_SDK_DL_URL}/operator-sdk_${OS}_${ARCH}
 chmod +x operator-sdk_${OS}_${ARCH} && sudo mv operator-sdk_${OS}_${ARCH} /usr/local/bin/operator-sdk
 
+################
+Exercise Istio
+Install Istio on CRC together
+Take some time to familiarise with the interface
+Start 2 different nginx applications and link them to the same service and see how it behaves
+Now lets add some Istio objects together
+Start the official Istio example for a more complete view of the possibilities from https://istio.io/latest/docs/examples/bookinfo/
+Use files provided in the repo, not the one from the official doc
 
-
+################
 Exercise FIX MY APP
 In the end, this URL should work!
 http://my-app-ingress.apps-crc.testing/myapp/secret/secret.html
 Also the build should trigger the deployment automatically
 
 
+###############
+Deprecated for /etc/hosts
+my-nginx-ingress.apps-crc.testing my-nginx-route.apps-crc.testing thanos-querier-openshift-monitoring.apps-crc.testing prometheus-k8s-openshift-monitoring.apps-crc.testing grafana-openshift-monitoring.apps-crc.testing alertmanager-main-openshift-monitoring.apps-crc.testing monitor-demo-app-default.apps-crc.testing prometheus-user-openshift-monitoring.apps-crc.testing thanos-ruler-openshift-user-workload-monitoring.apps-crc.testing api.crc.testing oauth-openshift.apps-crc.testing console-openshift-console.apps-crc.testing default-route-openshift-image-registry.apps-crc.testing kiali-istio-system.apps-crc.testing prometheus-istio-system.apps-crc.testing jaeger-istio-system.apps-crc.testing istio-ingressgateway-istio-system.apps-crc.testing grafana-istio-system.apps-crc.testing my-nginx-ingress-rbac.apps-crc.testing my-nginx-gateway.apps-crc.testing bookinfo.apps-crc.testing my-app-gateway.apps-crc.testing my-app-ingress.apps-crc.testing
