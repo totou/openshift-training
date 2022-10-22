@@ -159,15 +159,15 @@ Start provided objects
 # oc new-project monitor-demo-app
 oc create -f exercices/monitoring/example-app.yaml
 oc exec -ti  monitor-demo-app-577f4fb887-nzxzp -- /bin/sh
-curl http://127.0.0.1:8080/metrics
+curl http://127.0.0.1:8080/q/metrics
 
 oc -n openshift-monitoring get servicemonitor kube-state-metrics -o yaml
-oc -n openshift-monitoring get prometheusrule prometheus-k8s-rules -o yaml
+oc -n openshift-monitoring get prometheusrule prometheus-k8s-prometheus-rules -o yaml
 
 Add a new alerting rule on this metrics 'application_greetings_total'i and test how it behaves
 
 # From ioutside the POD if it works with WSL2... (probably not)
-export URL=$(oc -n nginx get route monitor-demo-app -o jsonpath='{.spec.host}')
+export URL=$(oc -n monitor-demo-app get route monitor-demo-app -o jsonpath='{.spec.host}')
 curl $URL/hello
 curl $URL/prime/6
 
