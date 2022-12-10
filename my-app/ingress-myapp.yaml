@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: my-app-ingress
+  namespace: myapp
+  annotations:
+    #nginx.ingress.kubernetes.io/rewrite-target: /
+    haproxy.router.openshift.io/rewrite-target: /
+spec:
+  #tls:
+  #  - hosts:
+  #    - https-example.foo.com
+  #  secretName: testsecret-tls
+  rules:
+  - host: my-app-ingress.apps-crc.testing
+    http:
+      paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: my-app-svc
+              port:
+                #number: 80
+                name: http-port

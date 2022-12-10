@@ -1,0 +1,53 @@
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  name: nginx-dc-manual
+spec:
+  selector:
+    app: nginx
+    version: "1"
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: nginx
+        version: "1"
+    spec:
+      initContainers:
+        - name: nginx-init
+          image: nginx:1.19.6
+          imagePullPolicy: "IfNotPresent"
+          command: [ "/bin/bash", "-c", "chmod a+rx /usr/share/nginx/html/pvc/" ]
+          volumeMounts:
+            - name: my-local-pvc-volume
+              mountPath: "/usr/share/nginx/html/pvc/"
+              readOnly: false
+      containers:
+        - name: nginx
+          image: nginx:1.19.6
+          imagePullPolicy: "IfNotPresent"
+          ports:
+          - containerPort: 80
+          volumeMounts:
+            - name: my-local-pvc-volume
+              mountPath: "/usr/share/nginx/html/pvc/"
+              readOnly: false
+      serviceAccountName: "nginx-sa"
+      securityContext:
+        fsGroup: 0
+      volumes:
+        - name: my-local-pvc-volume
+          persistentVolumeClaim:
+            claimName: my-local-pvc
+  strategy:
+    type: Rolling
+    customParams:
+      command:
+      - /bin/sh
+      - -c
+      - |
+        set -e
+        openshift-deploy --until=50%
+        echo Halfway there
+        openshift-deploy
+        echo Complete

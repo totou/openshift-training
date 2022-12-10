@@ -1,0 +1,41 @@
+kind: BuildConfig
+apiVersion: build.openshift.io/v1
+metadata:
+  name: "my-app-buildconfig"
+  namespace: myapp
+spec:
+  runPolicy: "Serial"
+  triggers:
+    - type: "ImageChange"
+    - type: "ConfigChange"
+  source:
+    configMaps:
+      - configMap:
+          name: python-source
+    dockerfile: |
+      FROM python:3.9.1-alpine
+      RUN apk update && apk add curl wget vim tar bash less
+      COPY myscript.py /myapp/myscript.py
+      COPY requirements.txt /myapp/requirements.txt
+      RUN chgrp -R 0 /myapp && chmod -R g=u /myapp
+      RUN python -m pip install -r /myapp/requirements.txt
+      ENV FLASK_APP /myapp/myscript.py
+      ENV FLASK_RUN_PORT 8080
+      ENV FLASK_RUN_HOST 0.0.0.0
+      CMD ["python", "-m", "flask", "run"]
+  strategy:
+    dockerStrategy:
+      #noCache: true
+      from:
+        kind: "DockerImage"
+        name: "python:3.9.1-alpine"
+      # Bypass rate limit
+      #pullSecret:
+      #  name: "training"
+  output:
+    to:
+      kind: "ImageStreamTag"
+      name: "my-app-image:latest"
+  resources:
+    requests:
+      cpu: 0.5
