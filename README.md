@@ -8,28 +8,49 @@ sudo apt install git
 git clone https://github.com/totou/openshift-training.git
 ```
 
+### Install the cluster (should be already done)
+```
+cd openshift-training/tools/
+# Source useful env vars
+source environment.sh
+# Install pre-requisites and download Openshift Local (CRC)
+./setup_wsl2.sh
+# In Powershell (stop WSL2 in order to restart it)
+wsl.exe --shutdown
+# Open a new Openshift terminal to start the WSL2 and go back to the tools folder
+cd openshift-training/tools/
+./install_crc.sh
+# If script does not work first try, run it a few times
+```
+
 ### Start the cluster
 Warning: with the log debug level, you will see "errors" in logs, ignore them, press accept to all Windows prompt that appear and it should be fine
 
-A few manual commands
 ```
-#cd <crc folder>
-#export PATH=$PATH:$PWD
-# Replace the pull secret with yours
-crc --log-level debug setup
-crc --log-level debug delete
-crc --log-level debug config set enable-cluster-monitoring true
-crc --log-level debug config set kubeadmin-password admin
-crc --log-level debug config set consent-telemetry no
-crc --log-level debug start --pull-secret-file red-hat-crc-pull-secret.txt --cpus 6 --memory 28000 --disable-update-check -n 1.1.1.1
-# Retrieve credentials
-crc console --credentials
-# Login
-oc login -u kubeadmin -p admin https://api.crc.testing:6443
+# Ensure that you have your pull-secret file and add it in the WSL2 at the place of your choice
+cd openshift-training/tools/
+./start_crc.sh <path to your pull-secret>
 ```
 Cluster console: https://console-openshift-console.apps-crc.testing/
+Open firefox in a background task or in another terminal and go to the above URL
+```
+firefox&
+```
 
-### Link WSL to CRC
+#### Prefill the local registry
+
+This is to avoid as much as possible to have docker.io rate limit when pulling images...
+https://docs.docker.com/docker-hub/download-rate-limit/
+100 pulls per 6 hours per IP address only!
+```
+# If you have a docker.io account, please use it
+podman-remote login --username <username>
+# I created a fake account to try to unblock situation: "traintrain"
+cd openshift-training/tools/
+./prefill_registry.sh
+```
+
+### Link WSL to CRC (deprecated - only for Windows installs)
 Semi-automatic version (recommended WSL2)
 ```
 ./tools/setup_wsl2.sh <Windows Username>

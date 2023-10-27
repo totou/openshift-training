@@ -1,3 +1,9 @@
+# Goal
+
+Familiarise yourself with CRC / Openshift Local.
+
+You should start your cluster, access the GUI (Console), access the command line.
+
 # Various Commands
 
 ```

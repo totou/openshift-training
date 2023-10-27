@@ -1,4 +1,4 @@
-FROM nginx:1.19.6 as myimage
+FROM nginx:1.25.2 as myimage
 LABEL org.opencontainers.image.authors="me@myorg.com"
 LABEL description="My example build for the training"
 

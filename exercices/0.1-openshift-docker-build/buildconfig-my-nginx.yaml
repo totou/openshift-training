@@ -10,7 +10,7 @@ spec:
     - type: "ConfigChange"
   source:
     dockerfile: |
-      FROM nginx:1.19.6
+      FROM nginx:1.25.2
       ENV MYVAR "MyVariableContent"
       RUN cp /usr/share/nginx/html/index.html /usr/share/nginx/html/myindex.html
   strategy:
@@ -18,7 +18,7 @@ spec:
       #noCache: true
       from:
         kind: "DockerImage"
-        name: "nginx:1.19.6"
+        name: "image-registry.openshift-image-registry.svc:5000/default/nginx:1.25.2"
       # Bypass rate limit
       #pullSecret:
       #  name: "training"
