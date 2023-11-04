@@ -1,0 +1,19 @@
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: monitor-demo-hpa
+  namespace: monitor-demo-app
+spec:
+  scaleTargetRef:
+    kind: Deployment
+    name: monitor-demo-app
+    apiVersion: apps/v1
+  minReplicas: 1
+  maxReplicas: 2
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: AverageValue
+          averageValue: 30m

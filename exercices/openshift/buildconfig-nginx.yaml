@@ -1,0 +1,24 @@
+kind: BuildConfig
+apiVersion: build.openshift.io/v1
+metadata:
+  name: "my-nginx-build"
+  namespace: nginx
+spec:
+  runPolicy: "Serial"
+  triggers:
+    - type: "ImageChange"
+    - type: "ConfigChange"
+  source:
+    dockerfile: |
+      FROM nginx:1.19.7
+      ENV MY_VAR=42
+  strategy:
+    dockerStrategy:
+      #noCache: true
+      from:
+        kind: "DockerImage"
+        name: "nginx:1.19.7"
+  output:
+    to:
+      kind: "ImageStreamTag"
+      name: "my-nginx:latest"

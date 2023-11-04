@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: nginx-statefulset
+spec:
+  selector:
+    matchLabels:
+      app: nginx-stateful
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: nginx-stateful
+    spec:
+      containers:
+      - name: nginx
+        image: image-registry.openshift-image-registry.svc:5000/default/nginx:1.25.2
+        imagePullPolicy: "IfNotPresent"
+        ports:
+        - containerPort: 80
+

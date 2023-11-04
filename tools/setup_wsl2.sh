@@ -1,6 +1,7 @@
 #!/bin/bash
 
-TOOLS_DIR=$(dirname $0)
+TOOLS_DIR=`realpath $(dirname $0)`
+echo "Tools directory is ${TOOLS_DIR}"
 
 source ${TOOLS_DIR}/environment.sh
 

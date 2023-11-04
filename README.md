@@ -19,18 +19,31 @@ source environment.sh
 wsl.exe --shutdown
 # Open a new Openshift terminal to start the WSL2 and go back to the tools folder
 cd openshift-training/tools/
+source environment.sh
 ./install_crc.sh
-# If script does not work first try, run it a few times
+# Script will not work first try as it creates a new user/group and we need to relog...
+# If script does not work second try, run it a few times more
+# In Powershell (stop WSL2 in order to restart it)
+wsl.exe --shutdown
+# Open a new Openshift terminal to start the WSL2 and go back to the tools folder
+cd openshift-training/tools/
+source environment.sh
+./install_crc.sh
 ```
 
-### Start the cluster
+### Start the cluster and setup environment
 Warning: with the log debug level, you will see "errors" in logs, ignore them, press accept to all Windows prompt that appear and it should be fine
+
+You should source `environment.sh` and `setup_environment_after_start.sh` in each of your terminals!
 
 ```
 # Ensure that you have your pull-secret file and add it in the WSL2 at the place of your choice
 cd openshift-training/tools/
+source environment.sh
 ./start_crc.sh <path to your pull-secret>
+source setup_environment_after_start.sh
 ```
+
 Cluster console: https://console-openshift-console.apps-crc.testing/
 Open firefox in a background task or in another terminal and go to the above URL
 ```

@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: python-source
+  namespace: myapp
+data:
+  myscript.py: |
+    from flask import Flask
+    app = Flask(__name__, static_url_path='/myapp', static_folder='/myapp')
+
+    @app.route('/')
+    def hello_world():
+      return 'Hello, World!'
+    @app.route('/health')
+    def readiness_probe():
+      return 'Ready', 200
+    @app.route('/live')
+    def liveness_probe():
+      return 'Forbidden liveness', 503
+
+  requirements.txt: |
+    Flask

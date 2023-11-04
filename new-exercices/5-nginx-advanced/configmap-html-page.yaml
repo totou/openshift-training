@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: my-configmap-html
+  namespace: nginx
+data:
+  index.html: |
+    This is my personalised index.html
+  configmap.html: |
+    This is my ConfigMap page !

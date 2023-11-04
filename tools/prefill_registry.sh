@@ -17,6 +17,10 @@ do
 podman-remote pull ${image}
 podman-remote tag ${image} default-route-openshift-image-registry.apps-crc.testing/default/${image}
 podman-remote push default-route-openshift-image-registry.apps-crc.testing/default/${image}
+podman-remote tag ${image} default-route-openshift-image-registry.apps-crc.testing/nginx/${image}
+podman-remote push default-route-openshift-image-registry.apps-crc.testing/nginx/${image}
+podman-remote tag ${image} default-route-openshift-image-registry.apps-crc.testing/myapp/${image}
+podman-remote push default-route-openshift-image-registry.apps-crc.testing/myapp/${image}
 done
 
 # Ensure all images can be pulled locally

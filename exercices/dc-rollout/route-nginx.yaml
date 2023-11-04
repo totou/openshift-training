@@ -1,0 +1,21 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  annotations:
+    haproxy.router.openshift.io/rewrite-target: /
+    haproxy.router.openshift.io/rate-limit-connections-http: "1"
+  name: my-nginx-route
+spec:
+  host: my-nginx-route.apps-crc.testing
+  path: /
+  to:
+    kind: Service
+    name: my-nginx-svc-1
+    weight: 50
+  alternateBackends:
+    - kind: Service
+      name: my-nginx-svc-2
+      weight: 50
+  port:
+    targetPort: my-http-port
+  wildcardPolicy: None

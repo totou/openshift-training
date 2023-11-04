@@ -1,0 +1,53 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: mycrds.mygroup.myapi.com
+spec:
+  group: mygroup.myapi.com
+  names:
+    kind: MyCRD
+    singular: mycrd
+    plural: mycrds
+    shortNames:
+      - mcrd
+  # Namespaced or Cluster
+  scope: Namespaced
+  versions:
+    - name: v1
+      served: true
+      storage: false
+      deprecated: true
+      deprecationWarning: "Please migrate to v2, no unknown fields and extended number"
+      schema:
+        openAPIV3Schema:
+          # True or undefined
+          x-kubernetes-preserve-unknown-fields: true
+          type: object
+          properties:
+            spec:
+              type: object
+              properties:
+                magicnumber:
+                  type: integer
+                  minimum: 1
+                  maximum: 42
+    - name: v2
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          # True or undefined
+          #x-kubernetes-preserve-unknown-fields: true
+          type: object
+          properties:
+            spec:
+              type: object
+              properties:
+                magicnumber:
+                  type: integer
+                  minimum: 1
+                  maximum: 42
+                extendednumber:
+                  type: integer
+                  minimum: 43
+                  maximum: 420

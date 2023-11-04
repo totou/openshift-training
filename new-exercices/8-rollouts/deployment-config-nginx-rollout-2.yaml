@@ -1,0 +1,73 @@
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  name: nginx-dc-2
+spec:
+  selector:
+    app: nginx
+    version: "2"
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: nginx
+        version: "2"
+    spec:
+      initContainers:
+        - name: nginx-init
+          image: image-registry.openshift-image-registry.svc:5000/default/nginx:1.25.2
+          imagePullPolicy: "IfNotPresent"
+          command: [ "/bin/bash", "-c", "chmod a+rx /usr/share/nginx/html/pvc/" ]
+          volumeMounts:
+            - name: my-local-pvc-volume
+              mountPath: "/usr/share/nginx/html/pvc/"
+              readOnly: false
+      containers:
+        - name: nginx
+          image: image-registry.openshift-image-registry.svc:5000/default/nginx:1.25.2
+          imagePullPolicy: "IfNotPresent"
+          ports:
+          - containerPort: 80
+          volumeMounts:
+            - name: my-local-pvc-volume
+              mountPath: "/usr/share/nginx/html/pvc/"
+              readOnly: false
+      serviceAccountName: "nginx-sa"
+      securityContext:
+        fsGroup: 0
+      volumes:
+        - name: my-local-pvc-volume
+          persistentVolumeClaim:
+            claimName: my-local-pvc
+  strategy:
+    type: Rolling
+    rollingParams:
+      updatePeriodSeconds: 1
+      intervalSeconds: 1
+      timeoutSeconds: 120
+      maxSurge: "20%"
+      maxUnavailable: "50%"
+      pre:
+        failurePolicy: Abort
+        execNewPod:
+          containerName: nginx
+          command: [ "/bin/bash", "-c", "echo \"Start pre ngi $MY_VAR\" >> /usr/share/nginx/html/pvc/logs.html" ]
+          env:
+            - name: MY_VAR
+              value: "Pre2"
+          securityContext:
+            fsGroup: 0
+          volumes:
+            - my-local-pvc-volume
+      post:
+        failurePolicy: Abort
+        execNewPod:
+          containerName: nginx
+          command: [ "/bin/bash", "-c", "echo \"Start post ngi $MY_VAR\" >> /usr/share/nginx/html/pvc/logs.html" ]
+          env:
+            - name: MY_VAR
+              value: "Post2"
+          securityContext:
+            fsGroup: 0
+          volumes:
+            - my-local-pvc-volume

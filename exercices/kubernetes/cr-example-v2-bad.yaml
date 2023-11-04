@@ -1,0 +1,9 @@
+apiVersion: mygroup.myapi.com/v2
+kind: MyCRD
+metadata:
+  name: my-cr-example-v2-bad
+spec:
+  magicnumber: 8
+  extendednumber: 1000
+  othernumber: 1
+

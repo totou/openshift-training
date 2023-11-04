@@ -1,0 +1,28 @@
+kind: BuildConfig
+apiVersion: build.openshift.io/v1
+metadata:
+  name: "my-nginx-buildconfig"
+  namespace: docker-builds
+spec:
+  runPolicy: "Serial"
+  triggers:
+    - type: "ImageChange"
+    - type: "ConfigChange"
+  source:
+    dockerfile: |
+      FROM nginx:1.25.2
+      ENV MYVAR "MyVariableContent"
+      RUN cp /usr/share/nginx/html/index.html /usr/share/nginx/html/myindex.html
+  strategy:
+    dockerStrategy:
+      #noCache: true
+      from:
+        kind: "DockerImage"
+        name: "image-registry.openshift-image-registry.svc:5000/default/nginx:1.25.2"
+      # Bypass rate limit
+      #pullSecret:
+      #  name: "training"
+  output:
+    to:
+      kind: "ImageStreamTag"
+      name: "my-nginx:latest"

@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  namespace: nginx
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - name: nginx
+          image: image-registry.openshift-image-registry.svc:5000/default/nginx:1.25.2
+          imagePullPolicy: "IfNotPresent"
+          ports:
+            - containerPort: 80
+          #resources:
+          #  requests:
+          #    cpu: "10m"
+          #    memory: "5Mi"
+          #  limits:
+          #    cpu: 0.1
+          #    memory: "30Mi"
+          readinessProbe:
+            exec:
+              command:
+                - cat
+                - /usr/share/nginx/html/index.html
+            initialDelaySeconds: 1
+            periodSeconds: 3
+            failureThreshold: 1
+            timeoutSeconds: 1
+          livenessProbe:
+            httpGet:
+              path: "/"
+              port: 80
+            initialDelaySeconds: 1
+            periodSeconds: 3
+            failureThreshold: 1
+            timeoutSeconds: 1
+      serviceAccountName: nginx-sa
+

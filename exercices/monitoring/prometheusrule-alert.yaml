@@ -1,0 +1,11 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: example-alert
+  namespace: monitor-demo-app
+spec:
+  groups:
+  - name: example
+    rules:
+    - alert: MonitorAppHighTrafficAlert
+      expr: rate(application_greetings_total[2m]) > 1
