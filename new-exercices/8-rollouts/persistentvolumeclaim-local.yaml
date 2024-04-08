@@ -6,8 +6,7 @@ spec:
   accessModes:
     - ReadWriteOnce
   volumeMode: Filesystem
-  #storageClassName: my-local-storageclass
-  storageClassName: ""
+  storageClassName: my-local-storageclass
   resources:
     requests:
       storage: 10Mi

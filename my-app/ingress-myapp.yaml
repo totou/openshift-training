@@ -6,6 +6,7 @@ metadata:
   annotations:
     #nginx.ingress.kubernetes.io/rewrite-target: /
     haproxy.router.openshift.io/rewrite-target: /
+    route.openshift.io/termination: "edge"
 spec:
   #tls:
   #  - hosts:
