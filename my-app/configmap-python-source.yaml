@@ -8,17 +8,21 @@ data:
     from flask import Flask
     from prometheus_flask_exporter import PrometheusMetrics
 
+    # Allow to target local path under the root directory using /myapp prefix
     app = Flask(__name__, static_url_path='/myapp', static_folder='/myapp')
     metrics = PrometheusMetrics(app)
 
     @app.route('/')
     def hello_world():
       return 'Hello, World!'
+
     @app.route('/health')
     @metrics.counter('health_count', 'Number of health/readiness checks', labels={'item_type': 'health'})
     def readiness_probe():
       return 'Ready', 200
+
     @app.route('/live')
+    @metrics.counter('live_count', 'Number of liveness checks', labels={'item_type': 'live'})
     def liveness_probe():
       return 'Alive', 200
 

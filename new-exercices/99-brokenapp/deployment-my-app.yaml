@@ -45,7 +45,8 @@ spec:
               port: 80
             initialDelaySeconds: 5
             periodSeconds: 3
-            failureThreshold: 1
+            # On CRC it seems sometimes random failure appear... increase threshold
+            failureThreshold: 3
             timeoutSeconds: 1
           volumeMounts:
             - name: my-configmap-html-volume
