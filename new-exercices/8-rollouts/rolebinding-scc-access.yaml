@@ -10,6 +10,10 @@ subjects:
   - kind: ServiceAccount
     name: default
     apiGroup: ""
+  # Needed in more recent OC versions as pre/post hook are apparently not played with the defined user, but with deployer
+  - kind: ServiceAccount
+    name: deployer
+    apiGroup: ""
 roleRef:
   kind: Role
   name: my-scc-user-role
