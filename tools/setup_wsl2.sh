@@ -21,7 +21,7 @@ cd crc-linux-${CRC_VERSION}-amd64/
 
 # Prereq CRC
 sudo apt update
-sudo apt-get install vim network-manager firefox wget curl tree ca-certificates -y
+sudo apt-get install vim network-manager firefox wget curl tree ca-certificates virtiofsd -y
 
 # Helm install
 pushd /tmp
