@@ -9,6 +9,7 @@ crc --log-level debug config set consent-telemetry no
 crc --log-level debug config set enable-cluster-monitoring true
 crc --log-level debug config set kubeadmin-password admin
 crc --log-level debug config set skip-check-wsl2 true
+crc --log-level debug config set network-mode system
 # crc config set enable-bundle-quay-fallback true
 echo "Setup of CRC... if it fails, retry it once or twice..."
 crc --log-level debug setup
