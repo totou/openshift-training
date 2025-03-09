@@ -1,0 +1,43 @@
+apiVersion: logging.openshift.io/v1
+kind: ClusterLogging
+metadata:
+  name: instance 
+  namespace: openshift-logging
+spec:
+  managementState: Managed 
+  logStore:
+    type: elasticsearch 
+    retentionPolicy: 
+      application:
+        maxAge: 1d
+      infra:
+        maxAge: 7d
+      audit:
+        maxAge: 7d
+    elasticsearch:
+      nodeCount: 2 
+      storage:
+        # Enter the name of an existing storage class for Elasticsearch storage. For best performance, specify a storage class that allocates block storage. If you do not specify a storage class, OpenShift Logging uses ephemeral storage.
+        # https://docs.openshift.com/container-platform/4.16/observability/logging/cluster-logging-deploying.html
+        # storageClassName: <storage_class_name>
+        storageClassName: crc-csi-hostpath-provisioner
+        size: 5G
+      resources: 
+          limits:
+            memory: 6Gi
+          requests:
+            memory: 6Gi
+      proxy: 
+        resources:
+          limits:
+            memory: 256Mi
+          requests:
+            memory: 256Mi
+      redundancyPolicy: SingleRedundancy
+  visualization:
+    type: kibana 
+    kibana:
+      replicas: 1
+  collection:
+    type: fluentd 
+    fluentd: {}

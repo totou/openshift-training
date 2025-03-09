@@ -30,4 +30,10 @@ do
 done
 oc set image-lookup
 
+# Give rights to all namespaces we will use the images for
+oc policy add-role-to-group system:image-puller system:serviceaccounts:toolbox --namespace=default
+oc policy add-role-to-group system:image-puller system:serviceaccounts:docker-builds --namespace=default
+oc policy add-role-to-group system:image-puller system:serviceaccounts:nginx --namespace=default
+oc policy add-role-to-group system:image-puller system:serviceaccounts:myapp --namespace=default
+oc policy add-role-to-group system:image-puller system:serviceaccounts:my-app --namespace=default
 

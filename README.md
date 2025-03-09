@@ -1,5 +1,15 @@
 # Openshift training !
 
+
+https://docs.openshift.com/container-platform/4.17/openshift_images/managing_images/using-image-pull-secrets.html#images-allow-pods-to-reference-images-across-projects_using-image-pull-secrets
+https://docs.openshift.com/container-platform/4.17/installing/installing_gcp/installing-restricted-networks-gcp.html#installation-initializing_installing-restricted-networks-gcp
+
+Logging a changer
+
+OperatorSDK?
+
+Retirer anciens exos
+
 ## Setup
 
 ### Download this repo
