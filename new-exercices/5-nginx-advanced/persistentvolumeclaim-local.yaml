@@ -7,7 +7,7 @@ spec:
   accessModes:
     - ReadWriteOnce
   volumeMode: Filesystem
-  storageClassName: my-local-storageclass
+  storageClassName: crc-csi-hostpath-provisioner
   #storageClassName: ""
   resources:
     requests:

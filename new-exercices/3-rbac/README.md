@@ -1,12 +1,13 @@
 # Exercise RBAC
 
-Goal is to give rights to `nginx-sa` service account in new project `nginx`
+Goal is to give rights to `nginx-sa` service account in new project `nginx`  
+The ClusterRole is provided as an example for RBAC aggregation
 
 ## Useful commands
 
 ```
 oc delete project nginx
-oc login --token $(oc sa get-token nginx-sa)
+oc login --token $(oc create token nginx-sa)
 oc whoami
 oc adm who-can use scc anyuid
 oc adm who-can get secrets
