@@ -13,7 +13,7 @@ pullSecretLocation=${1}
 ${TOOLS_DIR}/setup_wsl2.sh
 
 # Add your RedHat Openshift pull secret
-crc --log-level debug start --pull-secret-file ${pullSecretLocation} --cpus 12 --memory 32000 --disk-size 64 --disable-update-check -n 1.1.1.1
+crc --log-level debug start --pull-secret-file ${pullSecretLocation} --cpus 12 --memory 30000 --disk-size 64 --disable-update-check -n 1.1.1.1
 
 ${TOOLS_DIR}/setup_environment_after_start.sh
 
